@@ -1,3 +1,5 @@
+# UI View Controller Migration Rules
+
 ## Overview
 
 Migrating screen controllers is one of the most complex aspects of moving from CUBA to Jmix 2.x. Controllers change drastically: from inheritance of base classes to composition, from Classic UI to Vaadin Flow, and from simple injections to `@ViewComponent` annotations.

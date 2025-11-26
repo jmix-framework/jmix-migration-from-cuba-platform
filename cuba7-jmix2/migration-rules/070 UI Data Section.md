@@ -1,4 +1,7 @@
-## Common cased
+# UI View Descriptors Data Section Migration Rules 
+
+## Common cases
+
 ### Jmix:
 ```xml
 <data readOnly="true">

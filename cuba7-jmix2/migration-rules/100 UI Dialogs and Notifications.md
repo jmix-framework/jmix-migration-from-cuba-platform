@@ -1,4 +1,4 @@
-# Dialogs & Notifications: CUBA → Jmix 2.x Migration
+# UI Dialogs & Notifications Migration Rules
 
 ## Confirmation Dialog (Option Dialog)
 

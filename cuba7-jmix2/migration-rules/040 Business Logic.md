@@ -1,4 +1,4 @@
-# Data Access Layer
+# Business Logic Migration Rules
 
 ## DataManager Usage
 
@@ -25,9 +25,9 @@ List<Customer> customers = dataManager.load(Customer.class)
       .list();
 ```
 
-### Rest client
+## REST client
 
-Any cuba third-party clients should be replaced with RestTemplate OR RestClient (If possible, **prioritized**)
+Calls to any REST APIs in CUBA project should be replaced with RestTemplate OR RestClient (If possible, **prioritized**)
 
 1. Added to config default module's bean
 ```java
@@ -62,30 +62,15 @@ private RestTemplate restTemplate;
   }
 ```
 
-### Dependencies injection
+## Dependency injection
 
-By default try to avoid @Autowired, instead use constructor injection:
+Use @Autowired instead of @Inject.
 
-```java
+## Configuration properties
 
-class ServiceA {
-   private final ServiceDependentB b;
+Remove @Config beans, they are not needed and don't exist in Jmix. Use Spring properties instead.
 
-   public ServiceA(ServiceDependentB b) {
-      this.b = b;
-   }
-
-   public Object getSomeJob() {
-       val res = b.getSomeJob();
-       return mutateSomeJobByAservice(res);
-   }
-}
-
-```
-
-### Remove @Config bean, this no need in Spring
-
-### Properties:
+### Properties
 
 - if property is simple, you can use:
 ```java
@@ -93,7 +78,7 @@ class ServiceA {
 private String mainUrl;
 ```
 
-- If properties are very hard structed, then:
+- If properties are structured, then:
 
 ```java
 

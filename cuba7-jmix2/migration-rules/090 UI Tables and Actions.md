@@ -1,4 +1,4 @@
-# Flow UI: Tables & Actions (CUBA → Jmix)
+# UI Tables & Actions Migration Rules
 
 ## 1. Buttons panel (ButtonsPanel → `hbox.buttons-panel`)
 

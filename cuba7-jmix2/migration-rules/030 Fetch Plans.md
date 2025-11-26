@@ -1,18 +1,18 @@
-## FetchPlan Migration (Views → FetchPlans)
+# FetchPlan Migration Rules
 
-### Overview
+## Overview
 
 In CUBA, entity graphs are called **Views**. In Jmix 2.x, they are called **FetchPlans**. The concept is similar but the
 API and XML structure have changed.
 
-### XML-based FetchPlans
+## XML-based FetchPlans
 
 If you are putting new fetch-plan.xml into resources/base.pkg/ folder, then don't forget also add fetch-plans into application properties(or module.properties, same folder):
 
-jmix.core.fetch-plans-config=com/haulmont/shamrock/affiliatesregistry/fetch-plans.xml
+jmix.core.fetch-plans-config=com/company/myapp/fetch-plans.xml
 
 
-#### CUBA View Definition
+### CUBA View Definition
 
 ```xml
 <!-- views.xml -->
@@ -48,7 +48,7 @@ jmix.core.fetch-plans-config=com/haulmont/shamrock/affiliatesregistry/fetch-plan
 </views>
 ```
 
-#### Jmix FetchPlan Definition
+### Jmix FetchPlan Definition
 
 ```xml
 <!-- fetch-plans.xml -->
@@ -65,7 +65,7 @@ jmix.core.fetch-plans-config=com/haulmont/shamrock/affiliatesregistry/fetch-plan
                name="customer-detail"
                extends="_base">
         <property name="status"/>
-        <property name="orders" fetchPlan="_base">
+        <property name="orders" fetchPlan="_instance_name">
             <property name="orderNumber"/>
             <property name="orderDate"/>
         </property>
@@ -75,7 +75,7 @@ jmix.core.fetch-plans-config=com/haulmont/shamrock/affiliatesregistry/fetch-plan
                name="order-with-customer"
                extends="_base">
         <property name="customer" fetchPlan="_instance_name"/>
-        <property name="items" fetchPlan="_base">
+        <property name="items" fetchPlan="_instance_name">
             <property name="product" fetchPlan="_instance_name"/>
             <property name="quantity"/>
         </property>
@@ -84,7 +84,7 @@ jmix.core.fetch-plans-config=com/haulmont/shamrock/affiliatesregistry/fetch-plan
 </fetchPlans>
 ```
 
-### Inline FetchPlans in Views
+## Inline FetchPlans in Views
 
 ```xml
 <!-- CUBA -->
@@ -113,56 +113,20 @@ jmix.core.fetch-plans-config=com/haulmont/shamrock/affiliatesregistry/fetch-plan
 </data>
 ```
 
-### Fetch plan mapping
+## Fetch plan mapping
 
-### Built-in FetchPlans Comparison
+## Built-in FetchPlans Comparison
+
+Use the following table to map Cuba views to Jmix fetch plans:
 
 | CUBA View        | Jmix FetchPlan   | Description                                                 | Usage                  |
 |------------------|------------------|-------------------------------------------------------------|------------------------|
 | `_local`         | `_base`          | All local (non-reference) attributes including audit fields | Default for list views |
-| `_minimal`       | `_instance_name` | Only field(s) marked with `@InstanceName`                   | Lookup/combo boxes     |
-| `_instance-name` | `_instance_name` | Only instance name field(s)                                 | Display names only     |
-| `_base`          | `_base`          | Same as `_local` in CUBA                                    | Most common usage      |
+| `_minimal`       | `_instance_name` | Only field(s) marked with `@InstanceName`                   | Lookup/combo boxes, Display names only     |
+| `_base`          | `_base`          | `_minimal + _local` in CUBA                                 | Most common usage      |
 
-### ⚠️ CRITICAL DIFFERENCE: `_minimal` Behavior Changed
 
-```java
-// CUBA: _minimal loads ALL local attributes (same as _local)
-@Entity(name = "sales$Customer")
-public class Customer extends StandardEntity {
-    @Column(name = "NAME")
-    private String name;          // ✅ loaded with _minimal
-
-    @Column(name = "EMAIL")
-    private String email;         // ✅ loaded with _minimal
-
-    @Column(name = "PHONE")
-    private String phone;         // ✅ loaded with _minimal
-
-    @ManyToOne
-    private CustomerType type;    // ❌ NOT loaded with _minimal
-}
-
-// Jmix: _instance_name loads ONLY @InstanceName field
-@JmixEntity
-@Entity(name = "Customer")
-public class Customer {
-    @InstanceName
-    @Column(name = "NAME")
-    private String name;          // ✅ loaded with _instance_name
-
-    @Column(name = "EMAIL")
-    private String email;         // ❌ NOT loaded with _instance_name
-
-    @Column(name = "PHONE")
-    private String phone;         // ❌ NOT loaded with _instance_name
-
-    @ManyToOne
-    private CustomerType type;    // ❌ NOT loaded with _instance_name
-}
-```
-
-### Programmatic FetchPlan Creation
+## Programmatic FetchPlan Creation
 
 ```java
 // CUBA
@@ -205,11 +169,3 @@ List<Customer> customers = dataManager.load(Customer.class)
         .fetchPlan(customFetchPlan)
         .list();
 ```
-
-### System FetchPlans Mapping
-
-| CUBA View        | Jmix FetchPlan   | Description                          |
-|------------------|------------------|--------------------------------------|
-| `_local`         | `_base`          | All local (non-reference) attributes |
-| `_minimal`       | `_base`          | Same as _base                        |
-| `_instance-name` | `_instance_name` | Only @InstanceName field             |

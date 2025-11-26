@@ -1,4 +1,4 @@
-# CUBA vs Jmix UI Lifecycle and Event Migration
+# UI View Handlers Migration Rules
 
 ## Lifecycle Event Mapping (CUBA → Jmix)
 

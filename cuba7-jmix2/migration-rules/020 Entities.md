@@ -1,4 +1,4 @@
-# Entity Migration
+# Entity Migration Rules
 
 ## Rules
 1. ALWAYS, ALWAYS AGAIN relocate and migrate EACH property!
@@ -206,19 +206,19 @@ SupplierZone.zone=Zone
 
 ```messages
 \# Jmix messages.properties (remove sales\$ prefix)  
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone=Supplier zones
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.id=ID
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.version=Version
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.createTs=Create TS
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.createdBy=Created by
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.updateTs=Update TS
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.updatedBy=Updated by
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.deleteTs=Delete TS
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.deletedBy=Deleted by
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.supplier=Supplier
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.zoneId=Zone id
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.zone=Zone
-com.haulmont.shamrock.affiliatesregistry.entity.partner.supplier/SupplierZone.supplierZoneProducts=Supplier zone products
+com.company.myapp.entity.partner.supplier/SupplierZone=Supplier zones
+com.company.myapp.entity.partner.supplier/SupplierZone.id=ID
+com.company.myapp.entity.partner.supplier/SupplierZone.version=Version
+com.company.myapp.entity.partner.supplier/SupplierZone.createTs=Create TS
+com.company.myapp.entity.partner.supplier/SupplierZone.createdBy=Created by
+com.company.myapp.entity.partner.supplier/SupplierZone.updateTs=Update TS
+com.company.myapp.entity.partner.supplier/SupplierZone.updatedBy=Updated by
+com.company.myapp.entity.partner.supplier/SupplierZone.deleteTs=Delete TS
+com.company.myapp.entity.partner.supplier/SupplierZone.deletedBy=Deleted by
+com.company.myapp.entity.partner.supplier/SupplierZone.supplier=Supplier
+com.company.myapp.entity.partner.supplier/SupplierZone.zoneId=Zone id
+com.company.myapp.entity.partner.supplier/SupplierZone.zone=Zone
+com.company.myapp.entity.partner.supplier/SupplierZone.supplierZoneProducts=Supplier zone products
 ```
 
 ### 5. InstanceName Replacement

@@ -1,4 +1,4 @@
-# Migrating Screen Fragments (CUBA → Jmix 2.x)
+# UI Fragments Migration Rules
 
 ## Overview
 

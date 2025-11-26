@@ -1,4 +1,4 @@
-# Flow UI UX Rules (CUBA → Jmix)
+# UI UX Migration Rules
 
 Short, practical rules for keeping **layout and UX** close to CUBA when you migrate to **Jmix Flow UI**.
 Minimum text, maximum “before → after” snippets.
