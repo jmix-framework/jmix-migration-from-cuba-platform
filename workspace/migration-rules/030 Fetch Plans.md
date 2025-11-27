@@ -2,15 +2,17 @@
 
 ## Overview
 
-In CUBA, entity graphs are called **Views**. In Jmix 2.x, they are called **FetchPlans**. The concept is similar but the
-API and XML structure have changed.
+In CUBA, descriptors of loaded entity graphs are called **Views**. In Jmix, they are called **Fetch Plans**. The concept is similar but the API and XML structure have changed.
 
-## XML-based FetchPlans
+## Shared Fetch Plans
 
-If you are putting new fetch-plan.xml into resources/base.pkg/ folder, then don't forget also add fetch-plans into application properties(or module.properties, same folder):
+Shared fetch plans in CUBA project are located in `views.xml` file registered in `cuba.viewsConfig` application property. Migrate the contents of this file to `com/company/myapp/fetch-plans.xml` in Jmix project following the rules below.
 
+**Important:** Register path to this file in the `jmix.core.fetch-plans-config` application property, for example:
+
+```
 jmix.core.fetch-plans-config=com/company/myapp/fetch-plans.xml
-
+```
 
 ### CUBA View Definition
 
@@ -98,7 +100,7 @@ jmix.core.fetch-plans-config=com/company/myapp/fetch-plans.xml
     </collection>
 </data>
 
-        <!-- Jmix -->
+<!-- Jmix -->
 <data>
 <collection id="customersDc"
             class="com.company.sales.entity.Customer">

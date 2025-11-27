@@ -39,14 +39,23 @@ Migration proceeds incrementally in the following waves:
 
 Do one wave at a time. You will be explicitly asked to proceed with a particular wave or a specific part of the project.
 
+If you cannot migrate something, keep it with the comment `// TODO: migration <description>`
+
 Do not commit any changes automatically.
 
 Read **010 Common.md** when starting any migration step.
 When migrating entities, read **020 Entities.md**.
 When migrating fetch plans, read **030 Fetch Plans.md**.
-When migrating business logic, read **040 Business Logic.md**.
-When migrating fragments and screens, read all documents from **050 UI Fragments.md** to **110 UI UX Rules.md**.
+When migrating business logic, read **040 Business Logic.md** and **030 Fetch Plans.md**.
+When migrating fragments and screens, read all documents from **050 UI Fragments.md** to **110 UI UX Rules.md**, and **030 Fetch Plans.md**.
 
+ ## Important: Always Start by Reading Guidelines
+
+  Before working on ANY migration task:
+  1. ALWAYS read **010 Common.md** first
+  2. Read the wave-specific file(s) for your task
+  3. Verify you've read all required files before making changes
+  
 ## Using Tools
 
 Always use Jetbrains MCP server in the target project.

@@ -9,7 +9,13 @@
       "mcp__jetbrains__get_file_problems",
       "mcp__jetbrains__reformat_file",
       "Bash(done)",
-      "mcp__jetbrains__find_files_by_glob"
+      "mcp__jetbrains__find_files_by_glob",
+      "mcp__jetbrains__find_files_by_name_keyword",
+      "mcp__jetbrains__get_file_text_by_path",
+      "mcp__jetbrains__replace_text_in_file",
+      "Bash(do echo \"Checking: $file\")",
+      "Bash(else echo \"✗ MISSING\")",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []

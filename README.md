@@ -15,9 +15,9 @@ Below we assume you are using Claude Code, but other agents should work as well.
 	- Settings -> Tools -> MCP Server
 		- Enable
 		- Claude Code -> Auto-Configure
-- Open terminal in `workspace` and run Claude Code
-- `/mcp`, check that `jetbrains` is connected
-- Open the single `workspace/target-projects/myapp-jmix` project in IntelliJ.
+- Open both `myapp` and `myapp-jmix` projects in IntelliJ to be accessible by MCP server.
+- Open terminal in `workspace` and run Claude Code.
+- `/mcp`, check that `jetbrains` is connected.
 
 ### Sequence
 
@@ -25,42 +25,36 @@ We recommend to proceed with migration in the following sequence: entities, fetc
 
 ### Example prompts
 
-**Init agent:**
+After starting the agent and before giving any migration commands, initialize it by the following prompt (replace `myapp` with your app folder name):
 
 ```
 Your task is to migrate a project from CUBA Platform to Jmix.
-The source project is located in the `source-projects/myapp`. The empty target Jmix project is created in `target-projects/myapp-jmix`.
+The source project is located in the `source-projects/myapp`. The target Jmix project is created in `target-projects/myapp-jmix`.
 Read `AGENTS.md` to understand the project structure, migration approach and rules.
 ```
 
-**Migrate entities:**
+**Migration prompts:**
 
 ```
-Read AGENTS.md and migrate all entities. If you cannot migrate something, keep it with the comment `// TODO: migration <description>`
-```
-
-**Migrate fetch plans:**
-
-```
-Read AGENTS.md and migrate all shared fetch plans.
-```
-
-**Migrate business logic:**
-
-```
-Read AGENTS.md and migrate all business logic.
-```
-
-**Migrate UI:**
-
-```
-Read AGENTS.md and migrate fragments if any.
+Migrate all entities.
 ```
 
 ```
-Read AGENTS.md and Migrate all screens in `com.company.myapp.gui.sample` package.
+Migrate all shared fetch plans.
 ```
 
 ```
-Read AGENTS.md and migrate all screens.
+Migrate all business logic.
+```
+
+```
+Migrate fragments if any.
+```
+
+```
+Migrate all screens in `com.company.myapp.gui.sample` package.
+```
+
+```
+Migrate all screens.
 ```
