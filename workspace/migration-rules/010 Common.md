@@ -233,7 +233,7 @@ conditionJsonScreen.caption=Condition JSON
 menuCaption=Condition Json Screen
 ```
 
-In Jmix we appending "fnq (packages + / + key / name)":
+In Jmix we add a "group" (usually a package name) and `/` before the message key":
 
 ```
 ## Entity keys
@@ -245,4 +245,77 @@ com.company.myapp.view.partner/PartnerListView.title=Partner list view
 com.company.myapp.view.partner/column.enabled=Enabled
 com.company.myapp.view.partner/tabs.integrators=Integrators
 com.company.myapp.view.partner/tabs.suppliers=Suppliers
+```
+
+## Common classes
+
+Migrate usages of common classes as follows:
+
+- `com.haulmont.bali.util.Preconditions` -> `io.jmix.core.common.util.Preconditions`
+- `com.haulmont.cuba.core.global.DatatypeFormatter` -> `io.jmix.core.metamodel.datatype.DatatypeFormatter`
+- `com.haulmont.cuba.core.entity.KeyValueEntity`  -> `io.jmix.core.entity.KeyValueEntity`
+
+Replace invocation of `com.haulmont.cuba.core.global.Metadata#getTools` method to get `MetadataTools` interface with direct injection of `MetadataTools` bean using `@Autowired`.
+
+## Logger
+
+Replace injection of logger like `@Inject private Logger log;` with static field as follows:
+```
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+class SampleBean {
+    private static final Logger log = LoggerFactory.getLogger(SampleBean.class);
+```
+
+## Security permission checking
+
+If the source CUBA project uses `com.haulmont.cuba.core.global.Security` interface methods, such as `isEntityOpPermitted`, introduce the following bean in Jmix project and use it instead:
+
+```java
+package com.company.myapp;
+
+import io.jmix.core.Metadata;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.security.AccessDeniedException;
+import io.jmix.security.constraint.PolicyStore;
+import io.jmix.security.constraint.SecureOperations;
+import io.jmix.security.model.EntityPolicyAction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class SecurityPermissions {
+
+    @Autowired
+    private Metadata metadata;
+    @Autowired
+    private PolicyStore policyStore;
+    @Autowired
+    private SecureOperations secureOperations;
+
+    public boolean isEntityOpPermitted(Class<?> entityClass, EntityPolicyAction entityPolicyAction) {
+        MetaClass metaClass = metadata.getClass(entityClass);
+        switch (entityPolicyAction) {
+            case CREATE -> {
+                return secureOperations.isEntityCreatePermitted(metaClass, policyStore);
+            }
+            case UPDATE -> {
+                return secureOperations.isEntityUpdatePermitted(metaClass, policyStore);
+            }
+            case READ -> {
+                return secureOperations.isEntityReadPermitted(metaClass, policyStore);
+            }
+            case DELETE -> {
+                return secureOperations.isEntityDeletePermitted(metaClass, policyStore);
+            }
+            default -> throw new UnsupportedOperationException();
+        }
+    }
+
+    public void checkSpecificPermission(String permissionId) {
+        if (!secureOperations.isSpecificPermitted(permissionId, policyStore))
+            throw new AccessDeniedException("specific", permissionId);
+    }
+}
 ```

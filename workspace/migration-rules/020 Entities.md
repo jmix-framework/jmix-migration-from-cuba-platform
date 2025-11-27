@@ -13,15 +13,13 @@
 @Entity(name = "Customer")   <- Entity name in metadata
 ```
 
-If we working no module, then append module's prefix into Entity's meta-name
-
-e.g. if Store (DataSource) named `@Store(name = "addncompany")`
-then name entity `@Entity(name = "addncompany_NewEntity")`
+Table and entity names in the migrated Jmix project must be the same as in the source CUBA project. Do not change them.
 
 ## Base Entity Structure
+
 ```java
 // CUBA  
-@Entity(name = "sales\$Customer")  
+@Entity(name = "sales$Customer")  
 @Table(name = "SALES_CUSTOMER")  
 public class Customer extends StandardEntity {  
 
@@ -37,7 +35,7 @@ public class Customer extends StandardEntity {
 // Jmix  
 @JmixEntity  
 @Table(name = "SALES_CUSTOMER")  
-@Entity(name = "Customer")  
+@Entity(name = "sales$Customer")  
 public class Customer {  
 
     @JmixGeneratedValue  

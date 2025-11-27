@@ -1,5 +1,9 @@
 # Business Logic Migration Rules
 
+## Services
+
+Always migrate all CUBA service interfaces. Place them next to the implementing beans.
+
 ## DataManager Usage
 
 ```java

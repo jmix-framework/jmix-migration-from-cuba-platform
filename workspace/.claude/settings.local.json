@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__jetbrains__list_directory_tree",
+      "mcp__jetbrains__create_new_file",
+      "mcp__jetbrains__open_file_in_editor",
+      "Bash(mkdir:*)",
+      "Bash(find:*)",
+      "mcp__jetbrains__get_file_problems",
+      "mcp__jetbrains__reformat_file",
+      "Bash(done)",
+      "mcp__jetbrains__find_files_by_glob"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

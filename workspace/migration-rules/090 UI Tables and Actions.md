@@ -216,3 +216,67 @@ Conclusion:
 * **Inline editor → `editable="true"` + `editorActionsColumn`**
 * **`enabledRule`** stays the same
 * **External conditions** → remember to call `refreshState()` on the action.
+
+## Action classes
+
+Migrate usages of Action classes as follows:
+
+- `com.haulmont.cuba.gui.components.Action` -> `io.jmix.flowui.kit.action.Action`
+- `com.haulmont.cuba.gui.components.actions.ItemTrackingAction` -> `io.jmix.flowui.action.list.ItemTrackingAction`
+
+
+## View standard actions
+
+If the source CUBA browse screen contains these buttons linked with standard actions:
+
+```xml
+<!-- cuba -->
+<hbox id="lookupActions" spacing="true" visible="false">
+    <button action="lookupSelectAction"/>
+    <button action="lookupCancelAction"/>
+</hbox>
+```
+
+then in the Jmix list view add the actions explicitly before `layout` element and refer to them in the buttons:
+
+```xml
+<!-- jmix -->
+<actions>
+    <action id="selectAction" type="lookup_select"/>
+    <action id="discardAction" type="lookup_discard"/>
+</actions>
+<layout padding="false" spacing="true">
+    <!-- ... -->
+    <hbox id="lookupActions" visible="false">
+        <button id="selectBtn" action="selectAction"/>
+        <button id="cancelBtn" action="discardAction"/>
+    </hbox>
+</layout>
+```
+
+If the source CUBA edit screen contains these buttons linked with standard actions:
+
+```xml
+<!-- cuba -->
+<hbox id="editActions" spacing="true">
+    <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
+    <button id="closeBtn" action="windowClose"/>
+</hbox>
+```
+
+then in the Jmix detail view add the actions explicitly before `layout` element and refer to them in the buttons:
+
+```xml
+<!-- jmix -->
+<actions>
+    <action id="saveAction" type="detail_saveClose"/>
+    <action id="closeAction" type="detail_close"/>
+</actions>
+<layout padding="false" spacing="true">
+    <!-- ... -->
+    <hbox id="detailActions">
+        <button id="saveAndCloseBtn" action="saveAction"/>
+        <button id="closeBtn" action="closeAction"/>
+    </hbox>
+</layout>
+```

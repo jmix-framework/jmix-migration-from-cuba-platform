@@ -111,3 +111,43 @@ public class CustomerListView extends StandardListView<Customer> {
 | Data container        | `@Inject`      | `@ViewComponent`            | View scope  |
 
 Use these guidelines to map each type of dependency correctly when migrating your controllers from CUBA to Jmix.
+
+## Working with messages
+
+Use `io.jmix.flowui.view.MessageBundle` instead of `com.haulmont.cuba.gui.screen.MessageBundle` and inject it using the `@ViewComponent` annotation.
+
+## Background tasks
+
+Use `io.jmix.flowui.backgroundtask.BackgroundWorker` instead of `com.haulmont.cuba.gui.executors.BackgroundWorker`. Inject it with `@Autowired` annotation and use its `handle()` method to get `io.jmix.flowui.backgroundtask.BackgroundTaskHandler` instance.
+
+Instead of `com.haulmont.cuba.gui.backgroundwork.BackgroundWorkWindow`, use `createBackgroundTaskDialog` method of `io.jmix.flowui.Dialogs` inteface. For example:
+```
+BackgroundTask<Integer, Void> task = new EmailTask(selected);
+dialogs.createBackgroundTaskDialog(task) 
+        .withHeader("Sending reminder emails")
+        .withText("Please wait while emails are being sent")
+        .withTotal(selected.size())
+        .withShowProgressInPercentage(true)
+        .withCancelAllowed(true)
+        .open();
+```
+
+## Main menu
+
+If the source CUBA screen is registered in `web-menu.xml`, create appropriate menu item in target Jmix project's `menu.xml`. For example:
+
+CUBA:
+```xml
+<menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+    <menu id="application">
+        <item screen="Foo.browse"/>
+        <!-- ... -->
+```
+
+Jmix:
+```xml
+<menu-config xmlns="http://jmix.io/schema/flowui/menu">
+    <menu id="application" title="msg://com.company.myapp/menu.application.title" opened="true">
+        <item view="Foo.list" title="msg://com.company.myapp.view.foo/FooListView.title"/>
+        <!-- ... -->
+```
