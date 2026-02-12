@@ -1,6 +1,8 @@
-# Jmix AI-Assisted Migration
+# Jmix AI-Assisted Migration (CUBA Platform 7.2 → Jmix 2)
 
 This repository is designed to facilitate migration of application projects from CUBA Platform to Jmix with the help of AI agents.
+
+See also [jmix-framework/jmix-migration-from-v1](https://github.com/jmix-framework/jmix-migration-from-v1)
 
 Below we assume you are using Claude Code, but other agents should work as well.
 
