@@ -66,6 +66,43 @@ private RestTemplate restTemplate;
   }
 ```
 
+## Direct EntityManager / Persistence Usage
+
+CUBA services often use `com.haulmont.cuba.core.Persistence` to get `EntityManager` for raw JPA operations:
+
+```java
+// CUBA
+@Inject
+private Persistence persistence;
+
+public List<Customer> findByNativeQuery() {
+    try (Transaction tx = persistence.createTransaction()) {
+        EntityManager em = persistence.getEntityManager();
+        List<Customer> result = em.createNativeQuery("SELECT * FROM SALES_CUSTOMER WHERE ...", Customer.class)
+                .getResultList();
+        tx.commit();
+        return result;
+    }
+}
+```
+
+```java
+// Jmix
+@PersistenceContext
+private EntityManager em;
+
+@Transactional
+public List<Customer> findByNativeQuery() {
+    return em.createNativeQuery("SELECT * FROM SALES_CUSTOMER WHERE ...", Customer.class)
+            .getResultList();
+}
+```
+
+Key changes:
+- `com.haulmont.cuba.core.Persistence` → standard JPA `@PersistenceContext EntityManager em` (from `jakarta.persistence`)
+- `persistence.createTransaction()` → Spring `@Transactional` or `TransactionTemplate`
+- For multi-datastore: `persistence.getEntityManager("storeName")` → use Jmix's `StoreAwareLocator` to get the appropriate `EntityManager`
+
 ## Dependency injection
 
 Use @Autowired instead of @Inject.
@@ -73,6 +110,10 @@ Use @Autowired instead of @Inject.
 ## Configuration properties
 
 Remove @Config beans, they are not needed and don't exist in Jmix. Use Spring properties instead.
+
+**Important:** CUBA @Config interfaces have a `sourceType` parameter:
+- `SourceType.APP` or `SourceType.SYSTEM` → safe to replace with `@Value` or `@ConfigurationProperties` (property-file based)
+- `SourceType.DATABASE` → stores runtime-modifiable values in the `SYS_CONFIG` database table. Do NOT convert to `@Value` — this would lose runtime editability. Instead, create a custom settings entity or use Jmix's Dynamic Attributes add-on. Add `// TODO: migration - database-stored config (@Config SourceType.DATABASE) needs a custom solution in Jmix`
 
 ### Properties
 

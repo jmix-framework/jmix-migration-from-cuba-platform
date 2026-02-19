@@ -10,6 +10,8 @@ When migrating from CUBA to Jmix, screen lifecycle events have been renamed or r
 | `AfterInitEvent` (post init)          | *(Merged into BeforeShow in Jmix Flow UI)* | Jmix triggers data loaders before showing (no separate AfterInit in Flow UI).                                        |
 | `BeforeShowEvent` (before show)       | `BeforeShowEvent` (before show)            | Similar purpose. In Jmix, can fire multiple times if navigating to an already open view.                             |
 | `AfterShowEvent` (after screen shown) | **`ReadyEvent`** (after view shown)        | Renamed in Jmix. Fired as the final event when the view is fully ready (equivalent to CUBA’s *onAfterShow* handler). |
+| `BeforeCommitChangesEvent` (before save) | **`BeforeSaveEvent`** (before save)     | Renamed in Jmix. Fired before the data context is committed in detail views. Allows vetoing save.                    |
+| `AfterCommitChangesEvent` (after save)   | **`AfterSaveEvent`** (after save)       | Renamed in Jmix. Fired after the data context is committed in detail views.                                          |
 | `BeforeCloseEvent` (before close)     | `BeforeCloseEvent` (before close)          | No major change. Allows vetoing close.                                                                               |
 | `AfterCloseEvent` (after close)       | `AfterCloseEvent` (after close)            | No major change.                                                                                                     |
 
