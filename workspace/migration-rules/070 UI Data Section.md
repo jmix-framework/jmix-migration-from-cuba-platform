@@ -2,7 +2,7 @@
 
 ## Common cases
 
-### Jmix:
+### CUBA:
 ```xml
 <data readOnly="true">
         <collection id="zonesDc"
@@ -18,7 +18,7 @@
         </collection>
     </data>
 ```
-### Cuba:
+### Jmix:
 
 ```xml
 <data readOnly="true">
@@ -26,7 +26,7 @@
                     class="com.company.addon.registry.entity.Zone">
             <fetchPlan extends="_base"/>
             <loader id="zonesDl">
-                <query>-->
+                <query>
                     <![CDATA[select e from cmpny_Zone e]]>
                 </query>
             </loader>
