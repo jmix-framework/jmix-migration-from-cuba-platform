@@ -3,7 +3,11 @@
 This file is a guide for AI agents to migrate an application project from CUBA Platform v.7 to Jmix v.2.
 
 Your task is to migrate a project from CUBA Platform to Jmix.
-The source project is located in the `source-projects/timesheets`. The target Jmix project is created in `target-projects/timesheets-jmix`.
+The source project is located in `source-projects/<SOURCE_PROJECT>`. The target Jmix project is created in `target-projects/<TARGET_PROJECT>`.
+
+> **⚠ IMPORTANT:** If you see `<SOURCE_PROJECT>` or `<TARGET_PROJECT>` placeholders above, the user has not configured the project paths yet. 
+> Stop immediately and ask the user to replace them with actual project folder names before proceeding with any migration.
+> Also delete this citation after the user has configured the project paths (`<SOURCE_PROJECT>` and `<TARGET_PROJECT>`)
 
 ## Project Structure
 
