@@ -18,7 +18,8 @@ workspace/
 │    ├── 080 UI Handlers.md
 │    ├── 090 UI Tables and Actions.md
 │    ├── 100 UI Dialogs and Notifications.md
-│    └── 110 UI UX Rules.md
+│    ├── 110 UI UX Rules.md
+│    └── 120 Security Migration.md
 │
 ├── source-projects/                                 # Source CUBA project
 ├── target-projects/                                 # Target Jmix project
@@ -48,6 +49,7 @@ When migrating entities, read **020 Entities.md**.
 When migrating fetch plans, read **030 Fetch Plans.md**.
 When migrating business logic, read **040 Business Logic.md** and **030 Fetch Plans.md**.
 When migrating fragments and screens, read all documents from **050 UI Fragments.md** to **110 UI UX Rules.md**, and **030 Fetch Plans.md**.
+When migrating security roles and permissions, read **120 Security Migration.md**.
 
  ## Important: Always Start by Reading Guidelines
 

@@ -1,29 +1,13 @@
----
-name: migrate-security
-description: Migrate CUBA Platform 7.x security roles to Jmix 2.x. Converts AnnotatedRoleDefinition to @ResourceRole, @ScreenAccess to @ViewPolicy, access groups to @RowLevelRole, adds UiMinimalRole. Use when migrating security roles and permissions.
-argument-hint: "[role-class-name]"
-allowed-tools: Read, Grep, Glob, Edit, Write, mcp__jetbrains__get_file_text_by_path, mcp__jetbrains__find_files_by_name_keyword, mcp__jetbrains__find_files_by_glob, mcp__jetbrains__search_in_files_by_text, mcp__jetbrains__create_new_file, mcp__jetbrains__replace_text_in_file, mcp__jetbrains__get_file_problems, mcp__jetbrains__reformat_file
----
+# Security Migration Rules
 
-# Migrate Security
+## Overview
 
-You are a CUBA-to-Jmix security migration specialist. You convert CUBA Platform 7.x security roles and access groups to Jmix 2.x.
+CUBA Platform 7.x and Jmix 2.x have fundamentally different security models. CUBA uses **classes** extending base definitions; Jmix uses **interfaces** with policy annotations.
 
-## Before starting
-
-1. Read `migration-rules/010 Common.md` and `migration-rules/120 Security Migration.md`
-2. Identify source and target projects from `PLAN.md` or ask the user
-
-## Input
-
-`$ARGUMENTS` can be:
-- A role class name (e.g. `CustomersFullAccessRole`)
-- `all` to migrate all security roles
-- Empty — migrate all roles
-
-## Understanding CUBA security model
+## CUBA Security Model
 
 CUBA 7.x has two security mechanisms:
+
 1. **Design-time roles** — classes extending `AnnotatedRoleDefinition` with `@Role` annotation (package `com.haulmont.cuba.security.app.role.annotation`)
 2. **Access groups with constraints** — classes extending `AnnotatedAccessGroupDefinition` with `@AccessGroup` annotation (row-level security)
 
@@ -31,20 +15,14 @@ These map to Jmix's two role types:
 - `@ResourceRole` (interface) — replaces `AnnotatedRoleDefinition`
 - `@RowLevelRole` (interface) — replaces access group constraints
 
-## Migration steps
+## Design-Time Roles: AnnotatedRoleDefinition → @ResourceRole
 
-### 1. Find all security definitions in source
+### Structural Change
 
-Search `source-projects/` for:
-- Classes extending `AnnotatedRoleDefinition` with `@Role`
-- Classes extending `AnnotatedAccessGroupDefinition` with `@AccessGroup`
-- Check `cuba.rolesStorageMode` property for database-stored roles
+CUBA roles are **classes** with methods returning permission containers. Jmix roles are **interfaces** with `void` methods annotated with policies.
 
-### 2. Migrate each design-time role (AnnotatedRoleDefinition -> @ResourceRole)
+### CUBA Example
 
-**Structural change:** CUBA roles are classes extending `AnnotatedRoleDefinition` with methods returning permission containers. Jmix roles are interfaces with void methods annotated with policies.
-
-**CUBA role example:**
 ```java
 @Role(name = "Customers Full Access")
 public class CustomersFullAccessRole extends AnnotatedRoleDefinition {
@@ -76,7 +54,8 @@ public class CustomersFullAccessRole extends AnnotatedRoleDefinition {
 }
 ```
 
-**Jmix equivalent:**
+### Jmix Equivalent
+
 ```java
 @ResourceRole(name = "Customers Full Access", code = "customers-full-access")
 public interface CustomersFullAccessRole {
@@ -92,11 +71,11 @@ public interface CustomersFullAccessRole {
 }
 ```
 
-**Annotation mapping:**
+### Annotation Mapping
 
-| CUBA (com.haulmont.cuba.security.app.role.annotation) | Jmix 2.x | Package |
+| CUBA (`com.haulmont.cuba.security.app.role.annotation`) | Jmix 2.x | Package |
 |---|---|---|
-| `@Role(name = "...")` | `@ResourceRole(name = "...", code = "...")` — derive `code` from role name in kebab-case: `"Customers Full Access"` → `"customers-full-access"` | `io.jmix.security.role.annotation` |
+| `@Role(name = "...")` | `@ResourceRole(name = "...", code = "...")` — derive `code` from role name in kebab-case | `io.jmix.security.role.annotation` |
 | `@EntityAccess(target, allow)` | `@EntityPolicy(entityClass, actions)` | `io.jmix.security.role.annotation` |
 | `@EntityAttributeAccess(target, modify/view)` | `@EntityAttributePolicy(entityClass, attributes, action)` | `io.jmix.security.role.annotation` |
 | `@ScreenAccess(allow = {...})` | `@ViewPolicy(viewIds = {...})` | `io.jmix.securityflowui.role.annotation` |
@@ -104,7 +83,7 @@ public interface CustomersFullAccessRole {
 | `@ScreenComponentAccess` | `@UiComponentPolicy` (UI Constraints add-on, package `io.jmix.uiconstraints.annotation`) | — |
 | *(no CUBA equivalent)* | `@MenuPolicy(menuIds = {...})` | `io.jmix.securityflowui.role.annotation` |
 
-**EntityAccess -> EntityPolicy mapping:**
+### EntityAccess → EntityPolicy Mapping
 
 | CUBA `EntityOp` | Jmix `EntityPolicyAction` |
 |---|---|
@@ -114,16 +93,21 @@ public interface CustomersFullAccessRole {
 | `EntityOp.DELETE` | `EntityPolicyAction.DELETE` |
 | All four combined | `EntityPolicyAction.ALL` |
 
-**Update all screen IDs in `viewIds` and `menuIds`:**
-- `*.browse` -> `*.list`
-- `*.edit` -> `*.detail`
-- `*.lookup` -> `*.list`
+### Screen ID Updates
 
-**Add `@MenuPolicy`:** For each screen in `@ScreenAccess` that is a list/browse screen, add a corresponding `@MenuPolicy(menuIds = {...})` since CUBA didn't have a separate menu policy.
+Update all screen IDs in `viewIds` and `menuIds`:
+- `*.browse` → `*.list`
+- `*.edit` → `*.detail`
+- `*.lookup` → `*.list`
 
-### 3. Migrate access groups with constraints (-> @RowLevelRole)
+### @MenuPolicy
 
-**CUBA access group with JPQL constraint:**
+For each screen in `@ScreenAccess` that is a list/browse screen, add a corresponding `@MenuPolicy(menuIds = {...})` since CUBA didn't have a separate menu policy.
+
+## Access Groups: AnnotatedAccessGroupDefinition → @RowLevelRole
+
+### CUBA Example
+
 ```java
 @AccessGroup(name = "Active Orders Only", parent = RootGroup.class)
 public class ActiveOrdersGroup extends AnnotatedAccessGroupDefinition {
@@ -136,7 +120,8 @@ public class ActiveOrdersGroup extends AnnotatedAccessGroupDefinition {
 }
 ```
 
-**Jmix equivalent:**
+### Jmix Equivalent
+
 ```java
 @RowLevelRole(name = "Active Orders Only", code = "active-orders-only")
 public interface ActiveOrdersRole {
@@ -147,7 +132,7 @@ public interface ActiveOrdersRole {
 }
 ```
 
-**Constraint mapping:**
+### Constraint Mapping
 
 | CUBA | Jmix 2.x | Package |
 |---|---|---|
@@ -156,13 +141,14 @@ public interface ActiveOrdersRole {
 | `@JpqlConstraint(target, join, where)` | `@JpqlRowLevelPolicy(entityClass, join, where)` | `io.jmix.security.role.annotation` |
 | In-memory `@Constraint` method | `@PredicateRowLevelPolicy` | `io.jmix.security.role.annotation` |
 
-**Important:** CUBA access groups form a hierarchy (parent/child). Jmix row-level roles are flat — assign multiple roles to a user as needed. The hierarchical structure is lost; document this in a TODO comment.
+### Important Notes
 
-**Session attributes** used in CUBA access group constraints have **no equivalent** in Jmix. Add `// TODO: migration - session attributes from access groups need architectural rethinking` if detected.
+- CUBA access groups form a hierarchy (parent/child). Jmix row-level roles are **flat** — assign multiple roles to a user as needed. The hierarchical structure is lost; document this in a TODO comment.
+- **Session attributes** used in CUBA access group constraints have **no equivalent** in Jmix. Add `// TODO: migration - session attributes from access groups need architectural rethinking` if detected.
 
-### 4. Create UiMinimalRole
+## UiMinimalRole (Required)
 
-If no role with `@SpecificPolicy(resources = "ui.loginToUi")` exists in the target project, create one:
+Jmix 2.x requires a role with `ui.loginToUi` permission for users to access the UI. If no such role exists, create one:
 
 ```java
 package <base.package>.security;
@@ -182,37 +168,24 @@ public interface UiMinimalRole {
 }
 ```
 
-### 5. Check for database-stored roles
+## Edge Cases
 
-If the CUBA project uses database-stored roles (runtime roles), note that:
+### Wildcard Permissions
+If a CUBA role grants permissions to all entities (target = `"*"`), map to:
+- `@EntityPolicy(entityName = "*", actions = EntityPolicyAction.ALL)`
+- `@EntityAttributePolicy(entityName = "*", attributes = "*", action = EntityAttributePolicyAction.MODIFY)`
+
+For screen wildcards, use `@ViewPolicy(viewIds = "*")` and `@MenuPolicy(menuIds = "*")`.
+
+### Partial Entity Permissions
+When a CUBA role grants only some operations (e.g., only READ and UPDATE), use an array:
+```java
+@EntityPolicy(entityClass = Customer.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})
+```
+
+## Database-Stored Roles
+
+If the CUBA project uses database-stored roles (runtime roles, check `cuba.rolesStorageMode` property):
 - Runtime role data cannot be automatically migrated
 - The CUBA database role tables differ from Jmix's `ResourceRoleEntity` / `RowLevelRoleEntity`
 - Add `// TODO: migration - database-stored roles need to be recreated manually in Jmix admin UI`
-
-### 6. Validate
-
-- Run `mcp__jetbrains__get_file_problems` on created files
-- Verify all referenced view IDs match the actually migrated views
-- Fix compilation errors
-
-### 7. Update PLAN.md
-
-Mark migrated roles as done.
-
-## Edge cases
-
-**Wildcard permissions:** If a CUBA role grants permissions to all entities (target = `"*"`), map to:
-- `@EntityPolicy(entityName = "*", actions = EntityPolicyAction.ALL)`
-- `@EntityAttributePolicy(entityName = "*", attributes = "*", action = EntityAttributePolicyAction.MODIFY)`
-For screen wildcards, use `@ViewPolicy(viewIds = "*")` and `@MenuPolicy(menuIds = "*")`.
-
-**Partial entity permissions:** When a CUBA role grants only some operations (e.g., only READ + UPDATE), emit individual actions:
-- `@EntityPolicy(entityClass = Customer.class, actions = {EntityPolicyAction.READ, EntityPolicyAction.UPDATE})`
-
-## Important
-
-- Never modify files in `source-projects/`
-- Do not commit changes
-- `ui.loginToUi` is mandatory in Jmix 2.x — without it users cannot log in
-- Entity policies (`@EntityPolicy`, `@EntityAttributePolicy`) are unchanged between CUBA->Jmix conceptually but use different annotations
-- CUBA roles are **classes**, Jmix roles are **interfaces** — this is a structural change, not just a rename
