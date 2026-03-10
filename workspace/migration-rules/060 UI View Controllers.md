@@ -30,6 +30,8 @@ public class CustomerListView extends StandardListView<Customer> {
 }
 ```
 
+**IMPORTANT**: Always generate the `@Route` annotation in Jmix view, it is strictly required.
+
 #### Critical naming changes
 
 ```java

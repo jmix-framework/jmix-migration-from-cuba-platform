@@ -2,6 +2,9 @@
 
 This file is a guide for AI agents to migrate an application project from CUBA Platform v.7 to Jmix v.2.
 
+Your task is to migrate a project from CUBA Platform to Jmix.
+The source project is located in the `source-projects/timesheets`. The target Jmix project is created in `target-projects/timesheets-jmix`.
+
 ## Project Structure
 
 ```
@@ -25,8 +28,6 @@ workspace/
 ├── target-projects/                                 # Target Jmix project
 └── AGENTS.md                                        # This document
 ```
-
-Never read any files outside of the root workspace folder where this AGENTS.md file is located.
 
 ## Migration Strategy
 
@@ -60,4 +61,6 @@ When migrating security roles and permissions, read **120 Security Migration.md*
   
 ## Using Tools
 
-Always use Jetbrains MCP server in the target project.
+- Always use Jetbrains MCP server in the target project.
+- Use Context7 jmix-framework/jmix-context7 library for Jmix reference information and code examples.
+- Use Playwright CLI to check created and modified UI views. Start the application on a random port using `./gradlew bootRun '--args=--server.port=<random-port>` to avoid conflicts with running apps.
