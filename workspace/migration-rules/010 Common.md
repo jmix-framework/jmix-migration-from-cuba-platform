@@ -268,6 +268,19 @@ class SampleBean {
     private static final Logger log = LoggerFactory.getLogger(SampleBean.class);
 ```
 
+## Current user
+
+Replace `com.haulmont.cuba.security.global.UserSession` with `io.jmix.core.usersubstitution.CurrentUserSubstitution`:
+
+- `UserSession.getUser()` -> `CurrentUserSubstitution.getAuthenticatedUser()`
+- `UserSession.getCurrentOrSubstitutedUser()` -> `CurrentUserSubstitution.getEffectiveUser()`
+
+Cast returned `UserDetails` object to the application user class without any defensive `instanceof` checks, for example:
+
+```java
+User user = (User) currentUserSubstitution.getEffectiveUser();
+``` 
+
 ## Security permission checking
 
 If the source CUBA project uses `com.haulmont.cuba.core.global.Security` interface methods, such as `isEntityOpPermitted`, introduce the following bean in Jmix project and use it instead:
